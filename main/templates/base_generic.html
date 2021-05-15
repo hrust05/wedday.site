@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    {% block title %}
+    {% endblock %}
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/headers.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+{% block header %}
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <img src="{% static 'pictures/bg.png' %}" alt="Wedday 05 logo" height="50" width="50" data-atf="1"
+                     class="bi me-2">
+                <span class="fs-4">Wedday05</span>
+            </a>
+
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Главная</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Войти</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Регистрация</a></li>
+            </ul>
+        </header>
+    </div>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block pagination %}
+    {% if is_paginated %}
+        <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <footer class="container">
+        <p class="float-end"><a class="footer-link" href="#">Вернуться к началу страницы</a></p>
+        <p>© 2021 г. Wedday05, · <a class="footer-link" href="#">Приватность</a> · <a class="footer-link" href="#">Правила</a>
+        </p>
+    </footer>
+{% endblock %}
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>
