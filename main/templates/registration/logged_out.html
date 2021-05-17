@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    <title>Вы успешно вышли из профиля на Wedday05</title>
+{% endblock %}
+
+{% load static %}
+
+{% block specific_styles %}
+    <link rel="stylesheet" href="{% static 'css/cheatsheet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signin.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+    <body class="text-center">
+    <main class="form-signin">
+        <img class="mb-4" src="{% static 'pictures/bg.png' %}" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 fw-normal">Wedday 05</h1>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            Вы вышли из вашего профиля пользователя!
+        </div>
+        <p><a href="{% url 'index' %}">Вернуться на главную страницу</a></p>
+        <p><a href="{% url 'login' %}">Зайти снова</a></p>
+        <p class="mt-5 mb-3 text-muted">© 2021 Wedday 05</p>
+    </main>
+    </body>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

@@ -14,6 +14,10 @@ class Profile(models.Model):
         primary_key=True,
         default=uuid.uuid4,
         help_text='Уникальный идентификатор данного профиля')
+    description = models.fields.TextField(
+        'Резюме',
+        max_length=1000,
+        help_text='Введите краткую информацию о себе')
     location = models.fields.CharField(
         'Расположение',
         max_length=500,
@@ -23,9 +27,15 @@ class Profile(models.Model):
         'Дата рождения',
         null=True,
         blank=True,
-        help_text='Укажите Вашу дату рождения (неоябзательный параметр)')
+        help_text='Укажите Вашу дату рождения (необязательный параметр)')
+    email = models.EmailField(
+        'Адрес электронной почты',
+        max_length=500,
+        blank=True,
+        help_text='Укажите адрес электронной почты'
+    )
     email_confirmed = models.BooleanField(
-        'Верифицирован',
+        'email верифицирован',
         default=False)
     phone_regex = RegexValidator(
         regex=r'^\+?7?\d{9,9}$',
@@ -36,6 +46,9 @@ class Profile(models.Model):
         max_length=10,
         blank=True,
         help_text='Введите номер телефона в формате: +79999999999')
+    phone_verified = models.BooleanField(
+        'Телефон верифицирован',
+        default=False)
 
     def get_absolute_url(self):
         return reverse('user-detail', args=[str(self.user.id)])
@@ -68,24 +81,4 @@ class UserProfessionInstance(models.Model):
 
     def __str__(self):
         return '{0} {1}'.format(self.profession, self.userprofile)
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-
-@receiver(post_save, sender=User)
-def update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    instance.profile.save()
-
-
 

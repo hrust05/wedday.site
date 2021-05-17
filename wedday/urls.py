@@ -10,3 +10,9 @@ urlpatterns = [
     # path('main/', include('main.urls')),
     # path('', RedirectView.as_view(url='/main/', permanent=True))
 ]
+
+
+# Добавляем url - адреса на сайт для аутентификации пользователей (для регистрации, входа/выхода и смены пароля)
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
+]

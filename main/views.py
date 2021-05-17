@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Profile
-from .forms import UserForm, ProfileForm, SignUpForm
+# from .forms import ProfileRegistrationForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -53,43 +53,22 @@ def index(request):
 #     model = Profile
 #     # success_url = reverse_lazy('authors')
 
-def update_profile(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Ваш профиль успешно создан!')
-            return redirect('settings:profile')
-        else:
-            messages.error(request, 'Указанные Вами данные содержат ошибки.')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'profile/profile_form.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
 
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()  # load the profile instance created by the signal
-            user.profile.location = form.cleaned_data.get('location')
-            user.profile.birth_date = form.cleaned_data.get('birth_date')
-            user.profile.phone_number = form.cleaned_data.get('phone_number')
-            user.save()
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
-            return redirect('/')
-    else:
-        form = SignUpForm()
-    return render(request, 'profile/signup.html', {'form': form})
-
-# @login_required
-# @transaction.atomic
+# def profile_registration(request):
+#     if request.method == 'POST':
+#         form = ProfileRegistrationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             user.refresh_from_db()  # load the profile instance created by the signal
+#             user.profile.phone_number = form.cleaned_data.get('phone_number')
+#             user.profile.email = form.cleaned_data.get('email')
+#             user.profile.birth_date = form.cleaned_data.get('birth_date')
+#             user.profile.location = form.cleaned_data.get('location')
+#             user.save()
+#             raw_password = form.cleaned_data.get('password1')
+#             user = authenticate(username=user.username, password=raw_password)
+#             login(request, user)
+#             return redirect('/')
+#     else:
+#         form = ProfileRegistrationForm()
+#     return render(request, 'accounts/profile_create.html', {'form': form})

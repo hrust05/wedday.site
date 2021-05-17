@@ -7,10 +7,16 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 ]
 
+# User operations
+urlpatterns += [
+
+]
+
 # Profile operations
 urlpatterns += [
     # url(r'^profile/create/$', views.ProfileCreate.as_view(), name='profile_create'),
     # url(r'^profile/(?P<pk>\d+)/update/$', views.ProfileUpdate.as_view(), name='profile_update'),
     # url(r'^profile/(?P<pk>\d+)/delete/$', views.ProfileDelete.as_view(), name='profile_delete'),
-    url(r'^signup/$', views.signup, name='signup')
+    # url(r'^signup/$', views.signup, name='signup')
+    # url(r'^profile/registration/$', views.profile_registration, name='profile_create')
 ]

@@ -1,7 +1,13 @@
 {% extends "base_generic.html" %}
 
+{% load static %}
+
 {% block title %}
     <title>Wedday05 - Главная</title>
+{% endblock %}
+
+{% block specific_styles %}
+    <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
 {% endblock %}
 
 {% block content %}
