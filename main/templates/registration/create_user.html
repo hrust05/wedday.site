@@ -1,0 +1,92 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    <title>Вход на Wedday05</title>
+{% endblock %}
+
+{% load static %}
+
+{% block specific_styles %}
+    <link rel="stylesheet" href="{% static 'css/cheatsheet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signin.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+    <body class="text-center">
+    <main class="form-signin">
+        <form method="post" action="">
+            {% csrf_token %}
+            <img class="mb-4" src="{% static 'pictures/bg.png' %}" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 fw-normal">Wedday 05</h1>
+            <h1 class="h3 mb-3 fw-normal">Регистрация на сайте</h1>
+
+            <div class="mb-3">
+                <label class="form-label">Имя пользователя</label>
+                <input type="text" class="form-control" id="id_username" name="username" required>
+                <div id="username help" class="form-text">Введите желаемое имя пользователя на сайте</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Адрес электронной почты</label>
+                <input type="email" class="form-control" id="id_email" name="email">
+                <div id="email help" class="form-text">Введите Ваш адрес электронной почты (необязательно)</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Пароль</label>
+                <input type="password" class="form-control" id="id_password1" name="password1" required
+                       autocomplete="new-password">
+{#                <div id="email help" class="form-text">#}
+{#                    <ul>#}
+{#                        <li>Пароль не должен быть слишком похож на другую вашу личную информацию.</li>#}
+{#                        <li>Ваш пароль должен содержать как минимум 8 символов.</li>#}
+{#                        <li>Такой пароль часто используется.</li>#}
+{#                        <li>Пароль не может состоять только из цифр.</li>#}
+{#                    </ul>#}
+{#                </div>#}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Подтвердите пароль</label>
+                <input type="password" class="form-control" id="id_password2" name="password2" required
+                       autocomplete="new-password">
+                <div id="email help" class="form-text">Введите пароль повторно</div>
+            </div>
+
+            {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Ошибка. {{ form.errors }}
+                </div>
+            {% endif %}
+            {% if next %}
+                {% if user.is_authenticated %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <p>Ваш аккаунт не имеет доступа к данной странице. Для продолжения пожалуйста зайдите на сайт с
+                            аккаунтом
+                            имеющим доступ.</p>
+                    </div>
+                    {#        {% else %}#}
+                    {#            <p>Для просмотра данной страницы необходимо войти на сайт.</p>#}
+                {% endif %}
+            {% endif %}
+{#            <div class="checkbox mb-3">#}
+{#                <label>#}
+{#                    <input type="checkbox" value="remember-me"> Запомнить меня#}
+{#                </label>#}
+{#            </div>#}
+            <button class="w-100 btn btn-lg btn-primary" type="submit" value="submit">Продолжить</button>
+            <input type="hidden" name="next" value="{{ next }}">
+{#            <p><br><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>#}
+            <p class="mt-5 mb-3 text-muted">© 2021 Wedday 05</p>
+        </form>
+    </main>
+    </body>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

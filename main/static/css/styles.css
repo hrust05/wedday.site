@@ -43,3 +43,7 @@ a {
 .carousel-item {
     height: 30rem;
 }
+
+.form-text {
+    text-align: left;
+}

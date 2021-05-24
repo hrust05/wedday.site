@@ -1,10 +1,15 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
 from django.core.validators import RegexValidator
+# from django.contrib.auth.models import AbstractUser
 import uuid
+
+
+# class SiteUser(AbstractUser):
+#     pass
 
 
 class Profile(models.Model):
@@ -30,12 +35,12 @@ class Profile(models.Model):
         help_text='Укажите Вашу дату рождения (необязательный параметр)')
     email = models.EmailField(
         'Адрес электронной почты',
-        max_length=500,
+        max_length=254,
         blank=True,
         help_text='Укажите адрес электронной почты'
     )
     email_confirmed = models.BooleanField(
-        'email верифицирован',
+        'Адрес электронной почты верифицирован',
         default=False)
     phone_regex = RegexValidator(
         regex=r'^\+?7?\d{9,9}$',
@@ -81,4 +86,3 @@ class UserProfessionInstance(models.Model):
 
     def __str__(self):
         return '{0} {1}'.format(self.profession, self.userprofile)
-

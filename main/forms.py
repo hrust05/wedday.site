@@ -4,6 +4,21 @@ from django.contrib.auth.models import User
 from .models import Profile
 
 
+class UserRegistrationForm(UserCreationForm):
+    username = forms.CharField(
+        label='Имя пользователя',
+        label_suffix='',
+        help_text='Введите имя вашего профиля на сайте', )
+    email = forms.EmailField(
+        label='Адрес электронной почты',
+        label_suffix='',
+        help_text='Укажите адрес электронной почты', )
+    password = forms.PasswordInput()
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2',)
+
 # class ProfileRegistrationForm(UserCreationForm):
 #     phone_number = forms.CharField()
 #     email = forms.EmailField()

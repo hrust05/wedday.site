@@ -1,41 +1,35 @@
-from django.views import generic
-from django.shortcuts import render
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from .forms import UserRegistrationForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
-from .models import Profile
-# from .forms import ProfileRegistrationForm
-from django.shortcuts import redirect
-from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import User
 
 
 def index(request):
-    # num_books = Book.objects.all().count()
-    # num_instances = BookInstance.objects.all().count()
-    # num_instances_available = BookInstance.objects.filter(status__exact='a').count()
-    # num_authors = Author.objects.all().count()
-    # num_genres = Genre.objects.all().count()
-    # num_books_with_word = Book.objects.filter(title__contains='ebola').count()
-
-    # num_visits = request.session.get('num_visits', 0)
-    # request.session['num_visits'] = num_visits + 1
-
     return render(
         request,
         'index.html',
-        context={
-            # 'num_books': num_books,
-            # 'num_instances': num_instances,
-            # 'num_instances_available': num_instances_available,
-            # 'num_authors': num_authors,
-            # 'num_genres': num_genres,
-            # 'num_books_with_word': num_books_with_word,
-            # 'num_visits': num_visits
-        },
+        context={},
     )
 
+
+def user_registration(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()
+            # user.username = form.cleaned_data.get('username')
+            # user.email = form.cleaned_data.get('email')
+            user.save()
+            # raw_password = form.cleaned_data.get('password1')
+            # user = authenticate(username=user.username, password=raw_password)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            # login(request, user)
+            return redirect('/')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'registration/create_user.html', {'form': form})
 
 # class ProfileCreate(CreateView):
 #     model = Profile

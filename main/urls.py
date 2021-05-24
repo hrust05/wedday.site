@@ -9,7 +9,7 @@ urlpatterns = [
 
 # User operations
 urlpatterns += [
-
+    url(r'^accounts/create/$', views.user_registration, name='profile_create')
 ]
 
 # Profile operations

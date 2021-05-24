@@ -31,9 +31,22 @@
             </a>
 
             <ul class="nav nav-pills">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="" class="nav-link">{{ user.get_username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'logout' %}?next={{ request.path }}" class="nav-link">Выйти</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="nav-link">Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'profile_create' %}?next={{ request.path }}" class="nav-link">Регистрация</a>
+                    </li>
+                {% endif %}
                 {#                <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Главная</a></li>#}
-                <li class="nav-item"><a href="{% url 'login'%}?next={{request.path}}" class="nav-link">Войти</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Регистрация</a></li>
             </ul>
         </header>
     </div>
@@ -63,7 +76,8 @@
 {% block footer %}
     <footer class="container">
         <p class="float-end"><a class="footer-link" href="#">Вернуться к началу страницы</a></p>
-        <p>© 2021 Wedday 05 · <a class="footer-link" href="#">Приватность</a> · <a class="footer-link" href="#">Правила</a></p>
+        <p>© 2021 Wedday 05 · <a class="footer-link" href="#">Приватность</a> · <a class="footer-link"
+                                                                                   href="#">Правила</a></p>
     </footer>
 {% endblock %}
 
