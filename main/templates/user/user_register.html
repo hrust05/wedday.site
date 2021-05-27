@@ -1,0 +1,147 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    <title>Регистрация на Wedday05</title>
+{% endblock %}
+
+{% load static %}
+
+{% block specific_styles %}
+    <link rel="stylesheet" href="{% static 'css/form-validation.css' %}">
+{% endblock %}
+
+{% block header %}
+    <div class="container" style="flex: 0 1 auto">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <img src="{% static 'pictures/bg.png' %}" alt="Wedday 05 logo" height="50" width="50" data-atf="1"
+                     class="bi me-2">
+                <span class="fs-4">Wedday05</span>
+            </a>
+        </header>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container" style="flex: 1 0 auto">
+        <main>
+            <div class="py-5 text-center">
+                <h2>Регистрация на сайте Wedday05</h2>
+                <p class="lead"></p>
+            </div>
+            <div class="row g-5">
+                {% if form.errors %}
+                    <div class="col-md-5 col-lg-4 order-md-last">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            Ошибка. {{ form.errors }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="col-md-7 col-lg-8" style="margin: 48px auto">
+                    <h4 class="mb-3">Ваша анкета</h4>
+                    <form class="needs-validation" novalidate="" method="post" action="">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="username" class="form-label">Логин</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text">@</span>
+                                    <input type="text" class="form-control" id="id_username" name="username"
+                                           placeholder="Желаемый логин на сайте"
+                                           required="">
+                                    <div class="invalid-feedback">
+                                        Необходимо указать имя пользователя.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="password1" class="form-label">Пароль</label>
+                                <div class="input-group has-validation">
+                                    <input type="password" class="form-control" id="id_password1" name="password1"
+                                           placeholder="Пароль для входа на сайт"
+                                           required="">
+                                    <div class="invalid-feedback">
+                                        Необходимо указать пароль.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="password2" class="form-label">Пароль ещё раз</label>
+                                <div class="input-group has-validation">
+                                    <input type="password" class="form-control" id="id_password2" name="password2"
+                                           placeholder="Повторите пароль для проверки"
+                                           required="">
+                                    <div class="invalid-feedback">
+                                        Необходимо указать пароль ещё раз.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="email" class="form-label">Адрес электронной почты <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <input type="email" class="form-control" id="id_email" name="email"
+                                       placeholder="you@example.com">
+                                <div class="invalid-feedback">
+                                    Пожалуйста введите адрес электронной почты правильного формата.
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="phone_number" class="form-label">Номер телефона <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <input type="tel" class="form-control" id="id_phone_number" name="phone_number"
+                                       placeholder="+79999999999">
+                                <div class="invalid-feedback">
+                                    Пожалуйста введите номер телефона в правильном формате.
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="first_name" class="form-label">Имя <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <input type="text" class="form-control" id="id_first_name" name="first_name"
+                                       placeholder="Ваше имя" value="">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="last_name" class="form-label">Фамилия <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <input type="text" class="form-control" id="id_last_name" name="last_name"
+                                       placeholder="Ваша фамилия" value="">
+                            </div>
+                            <div class="col-12">
+                                <label for="location" class="form-label">Дата рождения <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <input type="date" class="form-control" id="id_birth_date" name="birth_date"
+                                       placeholder="Дата вашего дня рождения"
+                                       value="">
+                            </div>
+                            <div class="col-12">
+                                <label for="location" class="form-label">Расположение <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <input type="text" class="form-control" id="id_location" name="location"
+                                       placeholder="Укажите название ближайшего к вам населённого пункта"
+                                       value="">
+                            </div>
+                            <div class="col-12">
+                                <label for="location" class="form-label">О себе <span
+                                        class="text-muted">(необязательно)</span></label>
+                                <textarea class="form-control" id="id_description" name="description"
+                                          placeholder="Краткая информация, которую вы бы хотели указать о себе"></textarea>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <button class="w-100 btn btn-primary btn-lg" type="submit" value="submit">Продолжить
+                            регистрацию
+                        </button>
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+{% block specific_scripts %}
+    <script src="{% static 'js/form-validation.js' %}"></script>
+{% endblock %}
+

@@ -31,7 +31,7 @@
                     <div class="carousel-caption text-start">
                         <h1>Вы оказываете свадебные услуги?</h1>
                         <p>Зарегистрируйтесь на сайте в качестве специалиста и начните получать заказы уже сейчас!</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">Зарегистрироваться</a></p>
+                        <p><a class="btn btn-lg btn-primary" href="{% url 'profile_create' %}?next={{ request.path }}">Зарегистрироваться</a></p>
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@
         </div><!-- /.row -->
 
 
-        <hr class="featurette-divider">
+{#        <hr class="featurette-divider">#}
 
         <!-- /END THE FEATURETTES -->
 

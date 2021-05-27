@@ -1,8 +1,10 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
+from django.http import Http404
 from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.models import User
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileRegistrationForm
+# from django.views import generic
+# from django.shortcuts import get_object_or_404
+from .models import ProfessionInstance, Profile, Profession, SiteUser
 
 
 def index(request):
@@ -19,50 +21,99 @@ def user_registration(request):
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
-            # user.username = form.cleaned_data.get('username')
-            # user.email = form.cleaned_data.get('email')
+            user.phone_number = form.cleaned_data.get('phone_number')
+            user.email = form.cleaned_data.get('email')
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.birth_date = form.cleaned_data.get('birth_date')
+            user.location = form.cleaned_data.get('location')
+            user.description = form.cleaned_data.get('description')
             user.save()
             # raw_password = form.cleaned_data.get('password1')
             # user = authenticate(username=user.username, password=raw_password)
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            # login(request, user)
             return redirect('/')
     else:
         form = UserRegistrationForm()
-    return render(request, 'registration/create_user.html', {'form': form})
-
-# class ProfileCreate(CreateView):
-#     model = Profile
-#     user_form = UserForm
-#     profile_form = ProfileForm
-#     fields = '__all__'
-#
-#
-# class ProfileUpdate(LoginRequiredMixin, UpdateView):
-#     model = Profile
-#     fields = '__all__'
-#
-#
-# class ProfileDelete(LoginRequiredMixin, DeleteView):
-#     model = Profile
-#     # success_url = reverse_lazy('authors')
+    return render(request, 'user/user_register.html', {'form': form})
 
 
-# def profile_registration(request):
-#     if request.method == 'POST':
-#         form = ProfileRegistrationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             user.refresh_from_db()  # load the profile instance created by the signal
-#             user.profile.phone_number = form.cleaned_data.get('phone_number')
-#             user.profile.email = form.cleaned_data.get('email')
-#             user.profile.birth_date = form.cleaned_data.get('birth_date')
-#             user.profile.location = form.cleaned_data.get('location')
-#             user.save()
-#             raw_password = form.cleaned_data.get('password1')
-#             user = authenticate(username=user.username, password=raw_password)
-#             login(request, user)
-#             return redirect('/')
-#     else:
-#         form = ProfileRegistrationForm()
-#     return render(request, 'accounts/profile_create.html', {'form': form})
+def profile_registration(request):
+    professions = Profession.objects.all()
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = ProfileRegistrationForm(request.POST)
+            if form.is_valid():
+                if Profile.objects.filter(user=request.user).exists():
+                    profile = Profile.objects.get(user=request.user)
+                else:
+                    profile = form.save(commit=False)
+                    profile.user = request.user
+                    profile.save()
+
+                selected_professions = request.POST.getlist('professions')
+                for profession in selected_professions:
+                    profession_name = Profession.objects.get(name=profession)
+                    if not ProfessionInstance.objects.filter(profession=profession_name, userprofile=profile).exists():
+                        pr_instance = ProfessionInstance(
+                            profession=Profession.objects.get(name=profession),
+                            userprofile=profile,
+                            rating=0)
+                        pr_instance.save()
+                return redirect('/')
+    else:
+        form = ProfileRegistrationForm()
+    return render(
+        request,
+        'profile/create_profile.html',
+        {'form': form, 'professions': professions}
+    )
+
+
+def user_detail_view(request, pk):
+    try:
+        user_id = SiteUser.objects.get(pk=pk)
+    except SiteUser.DoesNotExist:
+        raise Http404("Указанного пользователя не существует")
+
+    # user_id = get_object_or_404(SiteUser, pk=pk)
+
+    if Profile.objects.filter(user=user_id).exists():
+        return render(request, 'user/user_detail.html',
+                      context={'user': user_id, 'profile': Profile.objects.get(user=user_id), })
+    else:
+        return render(request, 'user/user_detail.html', context={'user': user_id})
+
+
+def user_update_view(request, pk):
+    try:
+        user = SiteUser.objects.get(pk=pk)
+    except SiteUser.DoesNotExist:
+        raise Http404("Указанного пользователя не существует")
+
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST)
+        if form.is_valid():
+            user.refresh_from_db()
+            user.email = form.cleaned_data.get('email')
+            user.phone_number = form.cleaned_data.get('phone_number')
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.birth_date = form.cleaned_data.get('birth_date')
+            user.description = form.cleaned_data.get('description')
+            user.location = form.cleaned_data.get('location')
+            user.save()
+            if Profile.objects.filter(user=user).exists():
+                return render(request, 'user/user_detail.html',
+                              context={'user': user, 'profile': Profile.objects.get(user=user), })
+            else:
+                return render(request, 'user/user_detail.html', context={'user': user})
+    else:
+        form = UserUpdateForm()
+
+    if Profile.objects.filter(user=user).exists():
+        return render(request, 'user/user_update.html',
+                      context={'form': form, 'user': user, 'profile': Profile.objects.get(user=user), })
+    else:
+        return render(request, 'user/user_update.html',
+                      context={'form': form, 'user': user})

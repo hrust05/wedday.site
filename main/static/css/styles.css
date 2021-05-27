@@ -31,19 +31,37 @@ a {
     color: #6a5acd;
 }
 
-.footer-link {
-    text-decoration: underline;
-    color: slateblue;
-}
-
-.footer-link:hover {
-    color: #6f42c1;
-}
-
 .carousel-item {
     height: 30rem;
 }
 
 .form-text {
     text-align: left;
+}
+
+.layout-footer {
+    flex: 0 0 auto;
+    margin: 20px 40px 0px 40px;
+    padding: 20px 0 3rem 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+        /*padding-bottom: 3rem;*/
+}
+
+.footer-left-column {
+    float: left;
+    width: 50%;
+}
+
+.footer-right-column {
+    float: left;
+    text-align: right;
+    width: 50%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 3rem;
+    /*padding-bottom: 3rem;*/
 }

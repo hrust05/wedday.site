@@ -22,7 +22,7 @@
 <body>
 
 {% block header %}
-    <div class="container">
+    <div class="container" style="flex: 0 1 auto">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                 <img src="{% static 'pictures/bg.png' %}" alt="Wedday 05 logo" height="50" width="50" data-atf="1"
@@ -33,7 +33,7 @@
             <ul class="nav nav-pills">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a href="" class="nav-link">{{ user.get_username }}</a>
+                        <a href="{{ user.get_absolute_url }}" class="nav-link">{{ user.get_username }}</a>
                     </li>
                     <li class="nav-item">
                         <a href="{% url 'logout' %}?next={{ request.path }}" class="nav-link">Выйти</a>
@@ -43,7 +43,7 @@
                         <a href="{% url 'login' %}?next={{ request.path }}" class="nav-link">Войти</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'profile_create' %}?next={{ request.path }}" class="nav-link">Регистрация</a>
+                        <a href="{% url 'user_register' %}?next={{ request.path }}" class="nav-link">Регистрация</a>
                     </li>
                 {% endif %}
                 {#                <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Главная</a></li>#}
@@ -74,14 +74,16 @@
 {% endblock %}
 
 {% block footer %}
-    <footer class="container">
-        <p class="float-end"><a class="footer-link" href="#">Вернуться к началу страницы</a></p>
-        <p>© 2021 Wedday 05 · <a class="footer-link" href="#">Приватность</a> · <a class="footer-link"
-                                                                                   href="#">Правила</a></p>
+    <footer class="layout-footer">
+        <div class="footer-left-column">© 2021 "Wedday05"</div>
+        <div class="footer-right-column"></div>
     </footer>
 {% endblock %}
 
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+{% block specific_scripts %}
+{% endblock %}
 
 </body>
 </html>

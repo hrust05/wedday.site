@@ -16,52 +16,53 @@
 
 {% block content %}
 
-    <body class="text-center">
-    <main class="form-signin">
+    <div class="form-signin text-center">
         <form method="post" action="{% url 'login' %}">
+
             {% csrf_token %}
-            <img class="mb-4" src="{% static 'pictures/bg.png' %}" alt="" width="72" height="72">
+            <a href="/">
+                <img class="mb-4" src="{% static 'pictures/bg.png' %}" alt="" width="72" height="72">
+            </a>
             <h1 class="h3 mb-3 fw-normal">Wedday 05</h1>
             <h1 class="h3 mb-3 fw-normal">Вход на сайт</h1>
 
-            <div class="form-floating">
-                <input type="username" class="form-control" id="floatingInput" name="username"
-                       placeholder="Имя пользователя">
-                <label for="floatingInput">Имя пользователя</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" name="password"
-                       placeholder="Пароль">
-                <label for="floatingPassword">Пароль</label>
-            </div>
-            {% if form.errors %}
+            {% if user.is_authenticated %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    Ошибка входа. Пользователь или пароль указаны неверно.
+                    <p>Вы уже зашли на сайт.</p>
                 </div>
-            {% endif %}
-            {% if next %}
-                {% if user.is_authenticated %}
+            {% else %}
+                {% if form.errors %}
+                    {#                    <div class="alert alert-danger alert-dismissible fade show" role="alert">#}
+                    {#                        Ошибка входа. Пользователь или пароль указаны неверно.#}
+                    {#                    </div>#}
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <p>Ваш аккаунт не имеет доступа к данной странице. Для продолжения пожалуйста зайдите на сайт с
-                            аккаунтом
-                            имеющим доступ.</p>
+                        Ошибка входа. Пользователь или пароль указаны неверно.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    {#        {% else %}#}
-                    {#            <p>Для просмотра данной страницы необходимо войти на сайт.</p>#}
                 {% endif %}
+
+                <div class="form-floating">
+                    <input type="username" class="form-control" id="floatingInput" name="username"
+                           placeholder="Имя пользователя"
+                           {% if form.username.value != None %}value="{{ form.username.value }}"{% endif %}>
+                    <label for="floatingInput">Имя пользователя</label>
+                </div>
+
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" name="password"
+                           placeholder="Пароль">
+                    <label for="floatingPassword">Пароль</label>
+                </div>
+
+                <br>
+                <button class="w-100 btn btn-lg btn-primary" type="submit" value="login">Войти</button>
+                <input type="hidden" name="next" value="{{ next }}">
             {% endif %}
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me"> Запомнить меня
-                </label>
-            </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit" value="login">Войти</button>
-            <input type="hidden" name="next" value="{{ next }}">
+
             <p><br><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
-            <p class="mt-5 mb-3 text-muted">© 2021 Wedday 05</p>
+            <p class="mt-5 mb-3 text-muted">© 2021 "Wedday05"</p>
         </form>
-    </main>
-    </body>
+    </div>
 
 {% endblock %}
 

@@ -1,28 +1,33 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
-# from django.db.models.signals import post_save
-# from django.dispatch import receiver
 from django.core.validators import RegexValidator
-# from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser
 import uuid
 
 
-# class SiteUser(AbstractUser):
-#     pass
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    uuid = models.UUIDField(
+class SiteUser(AbstractUser):
+    id = models.UUIDField(
         'Идентификатор',
         primary_key=True,
         default=uuid.uuid4,
-        help_text='Уникальный идентификатор данного профиля')
-    description = models.fields.TextField(
-        'Резюме',
-        max_length=1000,
-        help_text='Введите краткую информацию о себе')
+        editable=False,
+        help_text='Уникальный идентификатор данного пользователя')
+    phone_regex = RegexValidator(
+        regex=r'^\+?7?\d{9,10}$',
+        message="Телефонный номер должен быть введён в формате: '+79999999999'")
+    phone_number = models.CharField(
+        'Номер телефона',
+        validators=[phone_regex],
+        max_length=12,
+        blank=True,
+        help_text='Введите номер телефона в формате: +79999999999')
+    phone_verified = models.BooleanField(
+        'Телефон верифицирован',
+        default=False)
+    email_verified = models.BooleanField(
+        'Адрес электронной почты верифицирован',
+        default=False)
     location = models.fields.CharField(
         'Расположение',
         max_length=500,
@@ -33,34 +38,34 @@ class Profile(models.Model):
         null=True,
         blank=True,
         help_text='Укажите Вашу дату рождения (необязательный параметр)')
-    email = models.EmailField(
-        'Адрес электронной почты',
-        max_length=254,
+    description = models.fields.TextField(
+        'Резюме',
         blank=True,
-        help_text='Укажите адрес электронной почты'
-    )
-    email_confirmed = models.BooleanField(
-        'Адрес электронной почты верифицирован',
-        default=False)
-    phone_regex = RegexValidator(
-        regex=r'^\+?7?\d{9,9}$',
-        message="Телефонный номер должен быть введён в формате: '+79999999999'")
-    phone_number = models.CharField(
-        'Номер телефона',
-        validators=[phone_regex],
-        max_length=10,
-        blank=True,
-        help_text='Введите номер телефона в формате: +79999999999')
-    phone_verified = models.BooleanField(
-        'Телефон верифицирован',
-        default=False)
+        max_length=1000,
+        help_text='Введите краткую информацию о себе (необязательно)')
 
     def get_absolute_url(self):
-        return reverse('user-detail', args=[str(self.user.id)])
+        return reverse('user_detail', args=[str(self.id)])
+
+    def __str__(self):
+        return '{0} (id = {1})'.format(self.username, self.id)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(SiteUser, on_delete=models.CASCADE)
+    id = models.UUIDField(
+        'Идентификатор',
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        help_text='Уникальный идентификатор данного профиля')
+
+    def get_absolute_url(self):
+        return reverse('profile_detail', args=[str(self.id)])
 
     def __str__(self):
         # return '%s (%s)' % (self.id, self.book.title)
-        return '{0} ({1})'.format(self.user.email, self.uuid)
+        return '{0} ({1})'.format(self.user.username, self.user.email)
 
 
 class Profession(models.Model):
@@ -72,17 +77,33 @@ class Profession(models.Model):
     def __str__(self):
         return self.name
 
+    # class Meta:
+    #     ordering = ['name', ]
 
-class UserProfessionInstance(models.Model):
+
+class ProfessionInstance(models.Model):
     userprofile = models.ForeignKey(
         'Profile',
         on_delete=models.SET_NULL,
         null=True,
         help_text='Уникальный идентификатор профиля специалиста',
     )
-    profession = models.OneToOneField(
-        Profession,
-        help_text='Одна из профессий, которыми обладает данный пользователь', on_delete=models.CASCADE)
+    rating = models.IntegerField(
+        'Рейтинг',
+        null=True,
+        help_text='Рейтинг специалиста в данной профессии'
+    )
+    profession = models.ForeignKey(
+        'Profession',
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    def get_absolute_url(self):
+        return reverse('profile-detail', args=[str(self.userprofile.id)])
 
     def __str__(self):
-        return '{0} {1}'.format(self.profession, self.userprofile)
+        return '{0} {1}'.format(self.userprofile.user.username, self.profession)
+
+    class Meta:
+        ordering = ['profession', ]

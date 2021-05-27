@@ -1,0 +1,173 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    <title>Страница пользователя {{ user.username }}</title>
+{% endblock %}
+
+{% load static %}
+
+{% block header %}
+    <div class="container" style="flex: 0 1 auto">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <img src="{% static 'pictures/bg.png' %}" alt="Wedday 05 logo" height="50" width="50" data-atf="1"
+                     class="bi me-2">
+                <span class="fs-4">Wedday05</span>
+            </a>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a href="{{ user.get_absolute_url }}" class="nav-link">{{ user.get_username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link">Выйти</a>
+                </li>
+            </ul>
+        </header>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="flex: 1 0 auto">
+        <main>
+            <div class="row g-5">
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    {% if profile %}
+                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-primary">Профили пользователя</span>
+                            <span class="badge bg-primary rounded-pill">{{ profile.professioninstance_set.count }}</span>
+                        </h4>
+                        <hr class="my-4">
+                        <div class="row g-3">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Профессия</th>
+                                    <th scope="col">Рейтинг</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for profession in profile.professioninstance_set.all %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>{{ profession.profession }}</td>
+                                        <td>{{ profession.rating }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-primary">Профиль специалиста отсутствует</span>
+                        </h4>
+                        <hr class="my-4">
+                        <a class="btn btn-primary btn-lg" href="{% url 'profile_create' %}" role="button">Завести профиль</a>
+                    {% endif %}
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <h4 class="mb-3">Данные пользователя "{{ user.username }}"</h4>
+                    <hr class="my-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="username" class="form-label">Имя пользователя на сайте</label>
+                            <p class="mb-1 text-muted">{{ user.username }}</p>
+                        </div>
+
+                        {% if user.first_name != '' %}
+                            <div class="col-sm-6">
+                                <label for="firstName" class="form-label">Имя</label>
+                                <p class="mb-1 text-muted">{{ user.first_name }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if user.last_name != '' %}
+                            <div class="col-sm-6">
+                                <label for="firstName" class="form-label">Фамилия</label>
+                                <p class="mb-1 text-muted">{{ user.last_name }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if user.email != '' %}
+                            <div class="col-sm-6">
+                                <label for="email" class="form-label">Адрес электронной почты</label>
+                                <p class="mb-1 text-muted">{{ user.email }}</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <br/>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck"
+                                               disabled="" {% if user.email_verified %} checked="" {% endif %}>
+                                        <label class="form-label">
+                                            Почтовый адрес подтверждён
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if user.phone_number != '' %}
+                            <div class="col-sm-6">
+                                <label for="phone_number" class="form-label">Номер телефона</label>
+                                <p class="mb-1 text-muted">{{ user.phone_number }}</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <br/>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck"
+                                               disabled="" {% if user.phone_verified %} checked="" {% endif %}>
+                                        <label class="form-label">
+                                            Номер телефона подтверждён
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if user.birth_date != none %}
+                            <div class="col-12">
+                                <label class="form-label">Дата рождения</label>
+                                <p class="mb-1 text-muted">{{ user.birth_date }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if user.location != '' %}
+                            <div class="col-12">
+                                <label class="form-label">Город</label>
+                                <p class="mb-1 text-muted">{{ user.location }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if user.description != '' %}
+                            <div class="col-12">
+                                <label class="form-label">Краткая информация о себе</label>
+                                <p class="mb-1 text-muted">{{ user.description }}</p>
+                            </div>
+                        {% endif %}
+
+                        <div class="col-sm-6">
+                            <label class="form-label">Дата регистрации</label>
+                            <p class="mb-1 text-muted">{{ user.date_joined }}</p>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="form-label">Последний раз заходил на сайт</label>
+                            <p class="mb-1 text-muted">{{ user.last_login }}</p>
+                        </div>
+                        <hr class="my-4">
+                        <a class="btn btn-secondary" href="{% url 'user_update'  pk=user.id %}"
+                           role="button">Изменить данные профиля</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+{#{% block footer %}#}
+{#    <footer class="my-5 pt-5 text-muted text-center text-small">#}
+{#        <p class="mb-1">© 2021 "Wedday05"</p>#}
+{#    </footer>#}
+{#{% endblock %}#}

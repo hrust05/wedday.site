@@ -42,3 +42,7 @@ body {
     padding-right: 0;
     padding-left: 0;
 }
+
+.alert-dismissible .btn-close {
+    padding: 0.5rem 0.5rem;
+}
