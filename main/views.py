@@ -5,6 +5,7 @@ from .forms import UserRegistrationForm, UserUpdateForm, ProfileRegistrationForm
 # from django.views import generic
 # from django.shortcuts import get_object_or_404
 from .models import ProfessionInstance, Profile, Profession, SiteUser
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def index(request):
@@ -38,38 +39,6 @@ def user_registration(request):
     return render(request, 'user/user_register.html', {'form': form})
 
 
-def profile_registration(request):
-    professions = Profession.objects.all()
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            form = ProfileRegistrationForm(request.POST)
-            if form.is_valid():
-                if Profile.objects.filter(user=request.user).exists():
-                    profile = Profile.objects.get(user=request.user)
-                else:
-                    profile = form.save(commit=False)
-                    profile.user = request.user
-                    profile.save()
-
-                selected_professions = request.POST.getlist('professions')
-                for profession in selected_professions:
-                    profession_name = Profession.objects.get(name=profession)
-                    if not ProfessionInstance.objects.filter(profession=profession_name, userprofile=profile).exists():
-                        pr_instance = ProfessionInstance(
-                            profession=Profession.objects.get(name=profession),
-                            userprofile=profile,
-                            rating=0)
-                        pr_instance.save()
-                return redirect('/')
-    else:
-        form = ProfileRegistrationForm()
-    return render(
-        request,
-        'profile/create_profile.html',
-        {'form': form, 'professions': professions}
-    )
-
-
 def user_detail_view(request, pk):
     try:
         user_id = SiteUser.objects.get(pk=pk)
@@ -90,6 +59,9 @@ def user_update_view(request, pk):
         user = SiteUser.objects.get(pk=pk)
     except SiteUser.DoesNotExist:
         raise Http404("Указанного пользователя не существует")
+
+    if not request.user == user:
+        raise Http404("Такой страницы не существует")
 
     if request.method == 'POST':
         form = UserUpdateForm(request.POST)
@@ -117,3 +89,55 @@ def user_update_view(request, pk):
     else:
         return render(request, 'user/user_update.html',
                       context={'form': form, 'user': user})
+
+
+def profile_create(request, pk):
+    try:
+        user = SiteUser.objects.get(pk=pk)
+    except SiteUser.DoesNotExist:
+        raise Http404("Указанного пользователя не существует")
+
+    if not request.user == user:
+        raise Http404("Такой страницы не существует")
+
+    professions = Profession.objects.all()
+    if request.method == 'POST':
+        form = ProfileRegistrationForm(request.POST)
+        if request.user.is_authenticated:
+            if form.is_valid():
+                if Profile.objects.filter(user=request.user).exists():
+                    profile = Profile.objects.get(user=request.user)
+                else:
+                    profile = form.save(commit=False)
+                    profile.user = request.user
+                    profile.save()
+
+                selected_professions = request.POST.getlist('professions')
+                for profession in selected_professions:
+                    profession_name = professions.get(name=profession)
+                    # profession_name = Profession.objects.get(name=profession)
+                    if not ProfessionInstance.objects.filter(profession=profession_name, userprofile=profile).exists():
+                        pr_instance = ProfessionInstance(
+                            profession=profession_name,
+                            userprofile=profile,
+                            rating=0)
+                        pr_instance.save()
+                if Profile.objects.filter(user=profile.user).exists():
+                    return render(request, 'user/user_detail.html',
+                                  context={'user': profile.user, 'profile': Profile.objects.get(user=profile.user), })
+                else:
+                    return render(request, 'user/user_detail.html', context={'user': profile.user})
+    else:
+        form = ProfileRegistrationForm()
+    # return render(
+    #     request,
+    #     'profile/profile_create.html',
+    #     {'form': form, 'professions': professions}
+
+    if Profile.objects.filter(user=user).exists():
+        return render(request, 'profile/profile_create.html',
+                      context={'form': form, 'user': user, 'professions': professions,
+                               'profile': Profile.objects.get(user=user), })
+    else:
+        return render(request, 'profile/profile_create.html',
+                      context={'form': form, 'user': user, 'professions': professions, })

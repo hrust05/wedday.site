@@ -15,7 +15,7 @@ urlpatterns += [
 
 # Profile operations
 urlpatterns += [
-    url(r'^profile/create/$', views.profile_registration, name='profile_create'),
+    url(r'^profile/(?P<pk>[-\w\d]+)/create/$', views.profile_create, name='profile_create'),
     # url(r'^profile/detail/(?P<pk>\d+)$', views.ProfileDetailView.as_view(), name='profile_detail'),
     # url(r'^profile/list/$', views.ProfileListView.as_view(), name='profile_list'),
     # url(r'^profile/create/$', views.ProfileCreate.as_view(), name='profile_create'),

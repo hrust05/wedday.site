@@ -55,5 +55,5 @@ class Profile(admin.ModelAdmin):
 
 @admin.register(Profession)
 class Profession(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'description')
     ordering = ('name',)

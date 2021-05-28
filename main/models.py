@@ -72,13 +72,19 @@ class Profession(models.Model):
     name = models.CharField(
         'Профессия',
         max_length=500,
-        help_text='Введите название добавляемой на сайт профессии')
+        help_text='Введите название добавляемой на сайт профессии',
+    )
+
+    description = models.TextField(
+        'Описание профессии',
+        max_length=1000,
+        null=True,
+        blank=True,
+        help_text='Краткое описание профессии',
+    )
 
     def __str__(self):
         return self.name
-
-    # class Meta:
-    #     ordering = ['name', ]
 
 
 class ProfessionInstance(models.Model):
