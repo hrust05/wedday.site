@@ -43,6 +43,18 @@ class SiteUser(AbstractUser):
         blank=True,
         max_length=1000,
         help_text='Введите краткую информацию о себе (необязательно)')
+    image_url = models.CharField(
+        'Фото профиля',
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text='Фото профиля (необязательно)')
+    insta_profile = models.CharField(
+        'Профиль в инстаграм',
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text='Имя профиля в инстаграм')
 
     def get_absolute_url(self):
         return reverse('user_detail', args=[str(self.id)])
@@ -110,6 +122,3 @@ class ProfessionInstance(models.Model):
 
     def __str__(self):
         return '{0} {1}'.format(self.userprofile.user.username, self.profession)
-
-    class Meta:
-        ordering = ['profession', ]

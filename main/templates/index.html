@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    <title>Wedday05 - Главная</title>
+    <title>Wedday05. Главная</title>
 {% endblock %}
 
 {% block specific_styles %}
@@ -92,7 +92,7 @@
 
                 <h2>Специалисты</h2>
                 <p>Каталог специалистов на сайте поможет Вам подобрать лучшего по множеству критериев!</p>
-                <p><a class="btn btn-secondary" href="#">Ознакомиться »</a></p>
+                <p><a class="btn btn-secondary" href="{% url 'catalog' %}">Ознакомиться »</a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <svg class="bd-placeholder-img rounded-circle" width="140" height="140"
@@ -119,14 +119,9 @@
                 <p><a class="btn btn-secondary" href="#">Перейти к конкурсам »</a></p>
             </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
-
-
 {#        <hr class="featurette-divider">#}
-
         <!-- /END THE FEATURETTES -->
-
     </div>
     <!-- /.container -->
     <!-- FOOTER -->
-
 {% endblock %}

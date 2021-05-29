@@ -1,0 +1,184 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+{% block title %}
+    <title>Wedday05. Каталог</title>
+{% endblock %}
+
+{% block specific_styles %}
+    {#    <link rel="stylesheet" href="{% static 'css/sidebars.css' %}">#}
+{% endblock %}
+
+{% block content %}
+
+    <main>
+        <div class="row g-5" style="width: 100%">
+            <div class="col-md-7 col-lg-8" style="margin: 48px auto">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">Параметры</a>
+                        <div class="collapse navbar-collapse">
+                            <form method="get" action="{% url 'catalog' %}">
+                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                    <li class="nav-item">
+                                        <a class="nav-link active">Специальность: </a>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <select class=" nav-link active form-select form-select-sm"
+                                                    style="width: 200px" name="profession">
+                                                {% if request.GET.profession == None %}
+                                                    <option value="" selected="" disabled="">Выберите специальность
+                                                    </option>
+                                                {% endif %}
+                                                {% for profession in professions_list %}
+                                                    <option {% if profession.id|lower == request.GET.profession|lower %}
+                                                        selected=""
+                                                    {% endif %}
+                                                        value="{{ profession.id }}">{{ profession.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </label>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active">Сортировать по: </a>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <select class=" nav-link active form-select form-select-sm"
+                                                    style="width: 250px" name="order_by">
+                                                {% if request.GET.order_by == None %}
+                                                    <option value="" selected="" disabled="">Выберите поле для
+                                                        сортировки
+                                                    </option>
+                                                {% endif %}
+                                                <option value="rating"
+                                                        {% if order_by|lower == 'rating' %}selected="" {% endif %}>
+                                                    Рейтинг
+                                                </option>
+                                                <option value="profession"
+                                                        {% if order_by|lower == 'profession' %}selected="" {% endif %}>
+                                                    Название профессии
+                                                </option>
+                                            </select>
+                                        </label>
+                                    </li>
+                                    <li class="nav-item" style="width: 30px">
+                                        <a class="nav-link"></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="btn btn-primary" type="submit" name="submit" value="submit">
+                                            Применить
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"></a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'catalog' %}" class="btn btn-primary">Сбросить</a>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded" style="height: 50px">
+                </nav>
+                <div style="height: 30px"></div>
+                <div class="catalog-results">
+                    {% if pr_instances %}
+                        {% for pr_instance in pr_instances %}
+                            <div class="catalog-element">
+                                <div class="catalog-element-inbox">
+                                    <div class="catalog-element-rating">
+                                        <span>Рейтинг - {{ pr_instance.rating }}</span>
+                                    </div>
+                                    <div class="catalog-element-thumbnail">
+                                        <svg class="bd-placeholder-img" width="200" height="250"
+                                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>
+                                            Placeholder</title>
+                                            <rect width="100%" height="100%" fill="#55595c"></rect>
+                                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                                        </svg>
+                                    </div>
+                                    <div class="catalog-element-info">
+                                        {#                                <strong class="d-inline-block mb-2 text-primary">World</strong>#}
+                                        <h3 class="mb-0">{{ pr_instance.userprofile }}</h3>
+                                        <div class="mb-1 text-muted">{{ pr_instance.profession }}</div>
+                                        {#                                <p class="card-text mb-auto">Короче водил газель барашка туда-сюда щас короче на свадьба#}
+                                        {#                                    бабки хочу поднять</p>#}
+                                        <p class="card-text mb-auto"></p>
+                                        <div>
+                                            <div style="float: left">
+                                                <div class="mb-1 text-muted">Телефон</div>
+                                                <p class="card-text mb-auto">{{ pr_instance.userprofile.user.phone_number }}</p>
+                                            </div>
+                                            {% if pr_instance.userprofile.user.insta_profile %}
+                                                <div style="float: left; padding-left: 30px">
+                                                    <div class="mb-1 text-muted">Instagram</div>
+                                                    <a href="#"
+                                                       class="">{{ pr_instance.userprofile.user.insta_profile }}</a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <p class="card-text mb-auto"></p>
+                                        <a href="{{ pr_instance.userprofile.user.get_absolute_url }}" class="">Открыть
+                                            профиль</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="row g-3">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Специалист</th>
+                            <th scope="col">Профессия</th>
+                            <th scope="col">Рейтинг</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for pr_instance in pr_instances %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ pr_instance.userprofile }}</td>
+                                <td>{{ pr_instance.profession }}</td>
+                                <td>{{ pr_instance.rating }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block pagination %}
+    {% if is_paginated %}
+        <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block specific_scripts %}
+    <script src="{% static 'js/sidebars.js' %}"></script>
+{% endblock %}

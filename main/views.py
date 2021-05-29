@@ -4,8 +4,9 @@ from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileRegistrationForm
 # from django.views import generic
 # from django.shortcuts import get_object_or_404
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ProfessionInstance, Profile, Profession, SiteUser
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
 
 
 def index(request):
@@ -141,3 +142,69 @@ def profile_create(request, pk):
     else:
         return render(request, 'profile/profile_create.html',
                       context={'form': form, 'user': user, 'professions': professions, })
+
+
+class CatalogListView(ListView):
+    model = ProfessionInstance
+    template_name = "catalog.html"
+    context_object_name = 'profession_instances'
+    paginate_by = 10
+
+    # def get_queryset(self):
+    #     new_context = ProfessionInstance.objects.all()
+    #
+    #     if self.request.GET.get('order_by'):
+    #         order = self.request.GET.get('order_by')
+    #         new_context.order_by(order).reverse()
+    #
+    #     if self.request.GET.get('profession'):
+    #         profession = self.request.GET.get('profession')
+    #         new_context = new_context.filter(profession=profession)
+    #
+    #     return new_context
+
+    # filter_val = self.request.GET.get('profession', )
+    # order = self.request.GET.get('order_by', )
+    # if not filter_val == 'None' and not order == 'None':
+    #     new_context = ProfessionInstance.objects.filter(
+    #         profession='',
+    #     ).order_by(order)
+    # else:
+    #     new_context = ProfessionInstance.objects.all()
+    # return new_context
+
+    def get_context_data(self, **kwargs):
+        context = super(CatalogListView, self).get_context_data(**kwargs)
+        filter_set = ProfessionInstance.objects.all()
+
+        if self.request.GET.get('order_by'):
+            order = self.request.GET.get('order_by')
+            filter_set = ProfessionInstance.objects.all().order_by(order).reverse()
+        else:
+            filter_set = ProfessionInstance.objects.all()
+
+        if self.request.GET.get('profession'):
+            profession = self.request.GET.get('profession')
+            filter_set = filter_set.filter(profession=profession)
+
+        context['pr_instances'] = filter_set
+        context['profession'] = self.request.GET.get('profession')
+        context['order_by'] = self.request.GET.get('order_by')
+        context['professions_list'] = Profession.objects.all()
+        return context
+
+
+# def catalog_view(request):
+#     return render(
+#         request,
+#         'catalog.html',
+#         context={},
+#     )
+
+
+def under_construction(request):
+    return render(
+        request,
+        'under_construction.html',
+        context={},
+    )
