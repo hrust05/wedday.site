@@ -148,48 +148,34 @@ class CatalogListView(ListView):
     model = ProfessionInstance
     template_name = "catalog.html"
     context_object_name = 'profession_instances'
-    paginate_by = 10
+    paginate_by = 20
 
-    # def get_queryset(self):
-    #     new_context = ProfessionInstance.objects.all()
-    #
-    #     if self.request.GET.get('order_by'):
-    #         order = self.request.GET.get('order_by')
-    #         new_context.order_by(order).reverse()
-    #
-    #     if self.request.GET.get('profession'):
-    #         profession = self.request.GET.get('profession')
-    #         new_context = new_context.filter(profession=profession)
-    #
-    #     return new_context
+    # def get_ordering(self):
+    #     ordering = self.request.GET.get('order_by')
+    #     print(ordering)
+    #     return ordering
 
-    # filter_val = self.request.GET.get('profession', )
-    # order = self.request.GET.get('order_by', )
-    # if not filter_val == 'None' and not order == 'None':
-    #     new_context = ProfessionInstance.objects.filter(
-    #         profession='',
-    #     ).order_by(order)
-    # else:
-    #     new_context = ProfessionInstance.objects.all()
-    # return new_context
+    def get_queryset(self):
+        new_context = ProfessionInstance.objects.all()
+
+        if self.request.GET.get('order_by') != 'None':
+            if self.request.GET.get('order_by'):
+                order = self.request.GET.get('order_by')
+                new_context = ProfessionInstance.objects.order_by(order)
+            else:
+                new_context = ProfessionInstance.objects.all()
+
+        if self.request.GET.get('profession') != 'None':
+            if self.request.GET.get('profession'):
+                profession = self.request.GET.get('profession')
+                new_context = new_context.filter(profession=profession)
+
+        return new_context
 
     def get_context_data(self, **kwargs):
         context = super(CatalogListView, self).get_context_data(**kwargs)
-        filter_set = ProfessionInstance.objects.all()
-
-        if self.request.GET.get('order_by'):
-            order = self.request.GET.get('order_by')
-            filter_set = ProfessionInstance.objects.all().order_by(order).reverse()
-        else:
-            filter_set = ProfessionInstance.objects.all()
-
-        if self.request.GET.get('profession'):
-            profession = self.request.GET.get('profession')
-            filter_set = filter_set.filter(profession=profession)
-
-        context['pr_instances'] = filter_set
-        context['profession'] = self.request.GET.get('profession')
-        context['order_by'] = self.request.GET.get('order_by')
+        context['profession'] = self.request.GET.get('profession', None)
+        context['order_by'] = self.request.GET.get('order_by', None)
         context['professions_list'] = Profession.objects.all()
         return context
 

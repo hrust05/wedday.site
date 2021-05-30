@@ -28,15 +28,17 @@
                                         <label>
                                             <select class=" nav-link active form-select form-select-sm"
                                                     style="width: 200px" name="profession">
-                                                {% if request.GET.profession == None %}
+                                                {% if request.GET.profession == 'None' or request.GET.profession == None %}
                                                     <option value="" selected="" disabled="">Выберите специальность
                                                     </option>
                                                 {% endif %}
                                                 {% for profession in professions_list %}
-                                                    <option {% if profession.id|lower == request.GET.profession|lower %}
-                                                        selected=""
-                                                    {% endif %}
-                                                        value="{{ profession.id }}">{{ profession.name }}</option>
+                                                    <option
+                                                            {% if profession.id|lower == request.GET.profession|lower %}
+                                                                selected=""
+                                                            {% endif %}
+                                                                value="{{ profession.id }}">{{ profession.name }}
+                                                    </option>
                                                 {% endfor %}
                                             </select>
                                         </label>
@@ -51,19 +53,23 @@
                                         <label>
                                             <select class=" nav-link active form-select form-select-sm"
                                                     style="width: 250px" name="order_by">
-                                                {% if request.GET.order_by == None %}
+                                                {% if request.GET.order_by == None or request.GET.order_by == 'None' %}
                                                     <option value="" selected="" disabled="">Выберите поле для
                                                         сортировки
                                                     </option>
                                                 {% endif %}
                                                 <option value="rating"
                                                         {% if order_by|lower == 'rating' %}selected="" {% endif %}>
-                                                    Рейтинг
+                                                    Рейтинг (по возрастанию)
                                                 </option>
-                                                <option value="profession"
-                                                        {% if order_by|lower == 'profession' %}selected="" {% endif %}>
-                                                    Название профессии
+                                                <option value="-rating"
+                                                        {% if order_by|lower == '-rating' %}selected="" {% endif %}>
+                                                    Рейтинг (по убыванию)
                                                 </option>
+                                                {#                                                <option value="profession"#}
+                                                {#                                                        {% if order_by|lower == 'profession' %}selected="" {% endif %}>#}
+                                                {#                                                    Название профессии#}
+                                                {#                                                </option>#}
                                             </select>
                                         </label>
                                     </li>
@@ -89,51 +95,48 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-light rounded" style="height: 50px">
                 </nav>
                 <div style="height: 30px"></div>
-                <div class="catalog-results">
-                    {% if pr_instances %}
-                        {% for pr_instance in pr_instances %}
-                            <div class="catalog-element">
-                                <div class="catalog-element-inbox">
-                                    <div class="catalog-element-rating">
-                                        <span>Рейтинг - {{ pr_instance.rating }}</span>
-                                    </div>
-                                    <div class="catalog-element-thumbnail">
-                                        <svg class="bd-placeholder-img" width="200" height="250"
-                                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>
-                                            Placeholder</title>
-                                            <rect width="100%" height="100%" fill="#55595c"></rect>
-                                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                                        </svg>
-                                    </div>
-                                    <div class="catalog-element-info">
-                                        {#                                <strong class="d-inline-block mb-2 text-primary">World</strong>#}
-                                        <h3 class="mb-0">{{ pr_instance.userprofile }}</h3>
-                                        <div class="mb-1 text-muted">{{ pr_instance.profession }}</div>
-                                        {#                                <p class="card-text mb-auto">Короче водил газель барашка туда-сюда щас короче на свадьба#}
-                                        {#                                    бабки хочу поднять</p>#}
-                                        <p class="card-text mb-auto"></p>
-                                        <div>
-                                            <div style="float: left">
-                                                <div class="mb-1 text-muted">Телефон</div>
-                                                <p class="card-text mb-auto">{{ pr_instance.userprofile.user.phone_number }}</p>
-                                            </div>
-                                            {% if pr_instance.userprofile.user.insta_profile %}
-                                                <div style="float: left; padding-left: 30px">
-                                                    <div class="mb-1 text-muted">Instagram</div>
-                                                    <a href="#"
-                                                       class="">{{ pr_instance.userprofile.user.insta_profile }}</a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <p class="card-text mb-auto"></p>
-                                        <a href="{{ pr_instance.userprofile.user.get_absolute_url }}" class="">Открыть
-                                            профиль</a>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+                {#                <div class="catalog-results">#}
+                {#                    {% if pr_instances %}#}
+                {#                        {% for pr_instance in pr_instances %}#}
+                {#                            <div class="catalog-element">#}
+                {#                                <div class="catalog-element-inbox">#}
+                {#                                    <div class="catalog-element-rating">#}
+                {#                                        <span>Рейтинг - {{ pr_instance.rating }}</span>#}
+                {#                                    </div>#}
+                {#                                    <div class="catalog-element-thumbnail">#}
+                {#                                        <svg class="bd-placeholder-img" width="200" height="250"#}
+                {#                                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>#}
+                {#                                            Placeholder</title>#}
+                {#                                            <rect width="100%" height="100%" fill="#55595c"></rect>#}
+                {#                                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>#}
+                {#                                        </svg>#}
+                {#                                    </div>#}
+                {#                                    <div class="catalog-element-info">#}
+                {#                                        <h3 class="mb-0">{{ pr_instance.userprofile }}</h3>#}
+                {#                                        <div class="mb-1 text-muted">{{ pr_instance.profession }}</div>#}
+                {#                                        <p class="card-text mb-auto"></p>#}
+                {#                                        <div>#}
+                {#                                            <div style="float: left">#}
+                {#                                                <div class="mb-1 text-muted">Телефон</div>#}
+                {#                                                <p class="card-text mb-auto">{{ pr_instance.userprofile.user.phone_number }}</p>#}
+                {#                                            </div>#}
+                {#                                            {% if pr_instance.userprofile.user.insta_profile %}#}
+                {#                                                <div style="float: left; padding-left: 30px">#}
+                {#                                                    <div class="mb-1 text-muted">Instagram</div>#}
+                {#                                                    <a href="#"#}
+                {#                                                       class="">{{ pr_instance.userprofile.user.insta_profile }}</a>#}
+                {#                                                </div>#}
+                {#                                            {% endif %}#}
+                {#                                        </div>#}
+                {#                                        <p class="card-text mb-auto"></p>#}
+                {#                                        <a href="{{ pr_instance.userprofile.user.get_absolute_url }}" class="">Открыть#}
+                {#                                            профиль</a>#}
+                {#                                    </div>#}
+                {#                                </div>#}
+                {#                            </div>#}
+                {#                        {% endfor %}#}
+                {#                    {% endif %}#}
+                {#                </div>#}
                 <div class="row g-3">
                     <table class="table table-striped">
                         <thead>
@@ -141,18 +144,32 @@
                             <th scope="col">#</th>
                             <th scope="col">Специалист</th>
                             <th scope="col">Профессия</th>
+                            <th scope="col">Телефон</th>
+                            <th scope="col">Инстаграм</th>
                             <th scope="col">Рейтинг</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for pr_instance in pr_instances %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ pr_instance.userprofile }}</td>
-                                <td>{{ pr_instance.profession }}</td>
-                                <td>{{ pr_instance.rating }}</td>
-                            </tr>
-                        {% endfor %}
+                        {% if profession_instances %}
+                            {% for pr_instance in profession_instances %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ pr_instance.userprofile }}</td>
+                                    <td>{{ pr_instance.profession }}</td>
+                                    <td>
+                                        {% if pr_instance.userprofile.user.phone_number != None %}
+                                            {{ pr_instance.userprofile.user.phone_number }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if pr_instance.userprofile.user.insta_profile != None %}
+                                            {{ pr_instance.userprofile.user.insta_profile }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ pr_instance.rating }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                         </tbody>
                     </table>
                 </div>
@@ -164,17 +181,59 @@
 {% block pagination %}
     {% if is_paginated %}
         <div class="pagination">
-                <span class="page-links">
-                    {% if page_obj.has_previous %}
-                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-                    {% endif %}
-                    <span class="page-current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-                    {% if page_obj.has_next %}
-                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-                    {% endif %}
-                </span>
+            <nav style="margin: 0 auto">
+                <ul class="pagination">
+                    <li class="page-item">
+                        {% if page_obj.has_previous %}
+                            <a class="page-link"
+                               href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page=1">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                    <li class="page-item">
+                        {% if page_obj.has_previous %}
+                            <a class="page-link"
+                               href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page={{ page_obj.previous_page_number }}">
+                                <span aria-hidden="true">{{ page_obj.previous_page_number }}</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page={{ page_obj.number }}">
+                            <span aria-hidden="true">{{ page_obj.number }}</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        {% if page_obj.has_next %}
+                            <a class="page-link"
+                               href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page={{ page_obj.next_page_number }}">
+                                <span aria-hidden="true">{{ page_obj.next_page_number }}</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                    <li class="page-item">
+                        {% if page_obj.has_next %}
+                            <a class="page-link"
+                               href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page={{ page_obj.paginator.num_pages }}">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+            {#            <span class="page-links">#}
+            {#                    {% if page_obj.has_previous %}#}
+            {#                        <a href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page={{ page_obj.previous_page_number }}">previous</a>#}
+            {#                    {% endif %}#}
+            {#                <span class="page-current">#}
+            {#                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+            {#                </span>#}
+            {#                {% if page_obj.has_next %}#}
+            {#                    <a href="{{ request.path }}?profession={{ profession }}&order_by={{ order_by }}&page={{ page_obj.next_page_number }}">next</a>#}
+            {#                {% endif %}#}
+            {#            </span>#}
         </div>
     {% endif %}
 {% endblock %}
