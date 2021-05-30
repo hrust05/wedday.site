@@ -141,11 +141,13 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            {#                            <th scope="col">#</th>#}
                             <th scope="col">Специалист</th>
                             <th scope="col">Профессия</th>
                             <th scope="col">Телефон</th>
+                            <th scope="col">Телефон подтверждён</th>
                             <th scope="col">Инстаграм</th>
+                            <th scope="col">Инстаграм подтверждён</th>
                             <th scope="col">Рейтинг</th>
                         </tr>
                         </thead>
@@ -153,8 +155,10 @@
                         {% if profession_instances %}
                             {% for pr_instance in profession_instances %}
                                 <tr>
-                                    <th scope="row">{{ forloop.counter }}</th>
-                                    <td>{{ pr_instance.userprofile }}</td>
+                                    {#                                    <th scope="row">{{ forloop.counter }}</th>#}
+                                    <td>
+                                        <a href="{{ pr_instance.userprofile.user.get_absolute_url }}">{{ pr_instance.userprofile.user.username }}</a>
+                                    </td>
                                     <td>{{ pr_instance.profession }}</td>
                                     <td>
                                         {% if pr_instance.userprofile.user.phone_number != None %}
@@ -162,8 +166,23 @@
                                         {% endif %}
                                     </td>
                                     <td>
+                                        {% if pr_instance.userprofile.user.phone_verified %}
+                                            <img src="{% static 'pictures/icon-yes.svg' %}" alt="True">
+                                        {% else %}
+                                            <img src="{% static 'pictures/icon-no.svg' %}" alt="False">
+                                        {% endif %}
+                                    </td>
+                                    <td>
                                         {% if pr_instance.userprofile.user.insta_profile != None %}
-                                            {{ pr_instance.userprofile.user.insta_profile }}
+                                            <a href="https://www.instagram.com/{{ pr_instance.userprofile.user.insta_profile }}">
+                                                {{ pr_instance.userprofile.user.insta_profile }}</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if pr_instance.userprofile.user.insta_verified %}
+                                            <img src="{% static 'pictures/icon-yes.svg' %}" alt="True">
+                                        {% else %}
+                                            <img src="{% static 'pictures/icon-no.svg' %}" alt="False">
                                         {% endif %}
                                     </td>
                                     <td>{{ pr_instance.rating }}</td>

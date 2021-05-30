@@ -60,6 +60,14 @@
                                     Пожалуйста введите номер телефона в правильном формате.
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <label for="insta_profile" class="form-label">Имя профиля в Instagram</label>
+                                <input type="tel" class="form-control" id="id_insta_profile" name="insta_profile"
+                                       {% if user.insta_profile != None %}value="{{ user.insta_profile }}"{% endif %}>
+                                <div class="invalid-feedback">
+                                    Пожалуйста введите корректное имя профиля.
+                                </div>
+                            </div>
                             <div class="col-sm-6">
                                 <label for="first_name" class="form-label">Имя</label>
                                 <input type="text" class="form-control" id="id_first_name" name="first_name"

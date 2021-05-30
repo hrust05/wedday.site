@@ -134,6 +134,26 @@
                             </div>
                         {% endif %}
 
+                        {% if user.insta_profile != '' and user.insta_profile != 'None' and user.insta_profile != None %}
+                            <div class="col-sm-6">
+                                <label for="email" class="form-label">Профиль в Instagram</label>
+                                <p class="mb-1 text-muted">{{ user.insta_profile }}</p>
+                                <a href="https://www.instagram.com/{{ user.insta_profile }}" class="btn btn-primary">Открыть</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <br/>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck"
+                                               disabled="" {% if user.insta_verified %} checked="" {% endif %}>
+                                        <label class="form-label">
+                                            Профиль инстаграм подтверждён
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         {% if user.birth_date != none %}
                             <div class="col-12">
                                 <label class="form-label">Дата рождения</label>

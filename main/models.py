@@ -55,6 +55,9 @@ class SiteUser(AbstractUser):
         blank=True,
         null=True,
         help_text='Имя профиля в инстаграм')
+    insta_verified = models.BooleanField(
+        'Профиль инстаграм подтверждён',
+        default=False)
 
     def get_absolute_url(self):
         return reverse('user_detail', args=[str(self.id)])
